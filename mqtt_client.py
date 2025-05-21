@@ -30,7 +30,7 @@ password = os.getenv("MQTT_PASSWORD")
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.username_pw_set(username, password)
 mqttc.on_connect = mqtt_callbacks.on_connect
-#mqttc.on_message = mqtt_callbacks.on_message
+# mqttc.on_message = mqtt_callbacks.on_message
 mqttc.on_subscribe = mqtt_callbacks.on_subscribe
 mqttc.on_unsubscribe = mqtt_callbacks.on_unsubscribe
 mqttc.on_publish = mqtt_callbacks.on_publish
@@ -52,18 +52,25 @@ try:
         whitebalance = round(whitebalance, 2)
         lux_level = round(lux_level, 2)
         data = {
-            "data": {
-                "Climate": [
-                    {"specie": "Temperature", "value": temp, "unit": "Fahrenheit"},
-                    {"specie": "Humidity", "value": relative_humidity, "unit": "%"},
-                ],
-                "light": [
-                    {"specie": "Ambient Light", "value": light_level, "unit": ""},
-                    {"specie": "Lux", "value": lux_level, "unit": "lx"},
-                    {"specie": "White Balance", "value": whitebalance, "unit": "K"},
-                ],
-            }
+            "Temperature": temp,
+            "Humidity": relative_humidity,
+            "Ambient Light": light_level,
+            "White Balance": whitebalance,
+            "Lux": lux_level,
         }
+        # data = {
+        #    "data": {
+        #        "Climate": [
+        #            {"specie": "Temperature", "value": temp, "unit": "Fahrenheit"},
+        #            {"specie": "Humidity", "value": relative_humidity, "unit": "%"},
+        #        ],
+        #        "light": [
+        #            {"specie": "Ambient Light", "value": light_level, "unit": ""},
+        #            {"specie": "Lux", "value": lux_level, "unit": "lx"},
+        #            {"specie": "White Balance", "value": whitebalance, "unit": "K"},
+        #        ],
+        #    }
+        # }
         MQTT_MSG = json.dumps(data)
         if veml7700.light is None:
             print("Light sensor not detected")

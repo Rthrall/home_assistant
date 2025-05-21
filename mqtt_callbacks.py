@@ -5,6 +5,7 @@ topic = "indoor/status"
 
 MQTT_MSG = json.dumps({})
 
+
 def is_json_empty(json_string):
     """
     Checks if a JSON string represents an empty object or array.
