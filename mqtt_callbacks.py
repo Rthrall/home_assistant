@@ -2,31 +2,24 @@ import json
 
 topic = "indoor/status"
 
-# MQTT_MSG = json.dumps(
-#    {
-#        "temperature": "NULL",
-#        "humidity": "NULL",
-#        "White light": "NULL",
-#        "Ambient light": "NULL",
-#        "Lux": "NULL",
-#    }
-# )
 
-MQTT_MSG = json.dumps(
-    {
-        "data": {
-            "Climate": [
-                {"specie": "Temperature", "value": "0", "unit": "Fahrenheit"},
-                {"specie": "Humidity", "value": "NULL", "unit": "%"},
-            ],
-            "light": [
-                {"specie": "Ambient Light", "value": "NULL", "unit": ""},
-                {"specie": "Lux", "value": "NULL", "unit": "lx"},
-                {"specie": "White Balance", "value": "NULL0", "unit": "K"},
-            ],
-        }
-    }
-)
+MQTT_MSG = json.dumps({})
+
+def is_json_empty(json_string):
+    """
+    Checks if a JSON string represents an empty object or array.
+
+    Args:
+        json_string: The JSON string to check.
+
+    Returns:
+        True if the JSON represents an empty object or array, False otherwise.
+    """
+    try:
+        data = json.loads(json_string)
+        return data == {} or data == []
+    except json.JSONDecodeError:
+        return True  # Consider invalid JSON as empty
 
 
 def on_subscribe(client, userdata, mid, reason_code_list, properties):
@@ -67,12 +60,8 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code.is_failure:
         print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
     else:
-        client.subscribe(topic)
-        client.publish(topic, MQTT_MSG)
-        # we should always subscribe from on_connect callback to be sure
-        # our subscribed is persisted across reconnections.
-        #if int(MQTT_MSG["data"]["Climate"][0]["value"]) == int(0):
-        #    print("Waiting for data...")
-        #else:
-        #    client.subscribe(topic)
-        #    client.publish(topic, MQTT_MSG)
+        if is_json_empty(MQTT_MSG):
+            print("Waiting for data...")
+        else:
+            client.subscribe(topic)
+            client.publish(topic, MQTT_MSG)

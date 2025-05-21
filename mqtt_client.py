@@ -30,9 +30,9 @@ password = os.getenv("MQTT_PASSWORD")
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.username_pw_set(username, password)
 mqttc.on_connect = mqtt_callbacks.on_connect
-mqttc.on_message = mqtt_callbacks.on_message
+#mqttc.on_message = mqtt_callbacks.on_message
 mqttc.on_subscribe = mqtt_callbacks.on_subscribe
-# mqttc.on_unsubscribe = mqtt_callbacks.on_unsubscribe
+mqttc.on_unsubscribe = mqtt_callbacks.on_unsubscribe
 mqttc.on_publish = mqtt_callbacks.on_publish
 
 mqttc.user_data_set([])
@@ -51,13 +51,6 @@ try:
         light_level = round(light_level, 2)
         whitebalance = round(whitebalance, 2)
         lux_level = round(lux_level, 2)
-        # data = {
-        #    "Temperature": temp,
-        #    "Humidity": relative_humidity,
-        #    "White light": whitebalance,
-        #    "Ambient light": light_level,
-        #    "Lux": lux_level,
-        # }
         data = {
             "data": {
                 "Climate": [
