@@ -54,8 +54,8 @@ try:
         data = {
             "Temperature": temp,
             "Humidity": relative_humidity,
-            "Ambient Light": light_level,
-            "White Balance": whitebalance,
+            "Ambient_Light": light_level,
+            "White_Balance": whitebalance,
             "Lux": lux_level,
         }
         # data = {
@@ -76,7 +76,8 @@ try:
             print("Light sensor not detected")
         else:
             mqttc.publish(topic, MQTT_MSG)
-        time.sleep(5)  # Send every 5 seconds
+        time.sleep(300)  # Send every 5 mins
+	#time.sleep(5)  # Send every 5 seconds
         # if USE_DEEP_SLEEP:
         #    mqttc.disconnect()
         #    pause = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + PUBLISH_DELAY)
