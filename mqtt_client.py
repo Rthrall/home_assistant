@@ -8,6 +8,7 @@ import mqtt_callbacks
 import board
 import adafruit_veml7700
 import adafruit_shtc3
+import lux_adjust
 
 # import alarm
 
