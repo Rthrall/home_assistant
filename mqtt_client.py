@@ -10,8 +10,6 @@ import adafruit_veml7700
 import adafruit_shtc3
 import lux_adjust
 
-# import alarm
-
 i2cl = board.I2C()
 i2ct = board.I2C()
 veml7700 = adafruit_veml7700.VEML7700(i2cl)
