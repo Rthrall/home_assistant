@@ -6,15 +6,11 @@ import os
 import paho.mqtt.client as mqtt
 import mqtt_callbacks
 import board
-import adafruit_veml7700
 import adafruit_shtc3
-import lux_adjust
 
-i2cl = board.I2C()
-i2ct = board.I2C()
-veml7700 = adafruit_veml7700.VEML7700(i2cl)
-sht = adafruit_shtc3.SHTC3(i2ct)
 
+i2c = board.I2C()
+sht = adafruit_shtc3.SHTC3(i2c)
 load_dotenv()
 
 USE_DEEP_SLEEP = True
@@ -41,21 +37,12 @@ mqttc.loop_start()
 try:
     while True:
         temperature, relative_humidity = sht.measurements
-        light_level = veml7700.light
-        whitebalance = veml7700.white
-        lux_level = veml7700.lux
         temp = (temperature * (9 / 5)) + 32
         temp = round(temp, 2)
         relative_humidity = round(relative_humidity, 2)
-        light_level = round(light_level, 2)
-        whitebalance = round(whitebalance, 2)
-        lux_level = round(lux_level, 2)
         data = {
             "Temperature": temp,
-            "Humidity": relative_humidity,
-            "Ambient_Light": light_level,
-            "White_Balance": whitebalance,
-            "Lux": lux_level,
+            "Humidity": relative_humidity
         }
         # data = {
         #    "data": {
@@ -71,10 +58,7 @@ try:
         #    }
         # }
         MQTT_MSG = json.dumps(data)
-        if veml7700.light is None:
-            print("Light sensor not detected")
-        else:
-            mqttc.publish(topic, MQTT_MSG)
+        mqttc.publish(topic, MQTT_MSG)
         time.sleep(300)  # Send every 5 mins
 	#time.sleep(5)  # Send every 5 seconds
         # if USE_DEEP_SLEEP:
